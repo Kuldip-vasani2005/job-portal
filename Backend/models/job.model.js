@@ -35,6 +35,10 @@ const jobSchema = new mongoose.Schema(
       required: true,
       enum: ["full-time", "part-time", "contract", "internship", "remote"],
     },
+    experienceLevel:{
+      type: String,
+      required: true,
+    },
     position: {
       type: Number,
       required: true,
