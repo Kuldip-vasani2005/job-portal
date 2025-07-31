@@ -8,10 +8,16 @@ import { Button } from "../ui/button";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { USER_API_END_POINT } from "../utils/contants";
-
+import { setLoading } from "../../redux/authSlice";
+import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Loader2 } from "lucide-react";
 
 const Signup = () => {
-     const navigate = useNavigate();
+  const navigate = useNavigate();
+  const { loading } = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+
   const [input, setInput] = useState({
     fullname: "",
     email: "",
@@ -41,7 +47,7 @@ const Signup = () => {
   const submitHandler = async (e) => {
     e.preventDefault();
     const formData = new FormData();
-    formData.append("fullName", input.fullname);
+    formData.append("fullname", input.fullname);
     formData.append("email", input.email);
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("password", input.password);
@@ -50,10 +56,13 @@ const Signup = () => {
     if (input.file) {
       formData.append("file", input.file);
     }
- 
 
     try {
+      dispatch(setLoading(true));
       const res = await axios.post(`${USER_API_END_POINT}/register`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
         withCredentials: true,
       });
       if (res.data.success) {
@@ -65,6 +74,8 @@ const Signup = () => {
     } catch (error) {
       console.error("Registration error:", error);
       toast.success(error.response.data.message);
+    } finally {
+      dispatch(setLoading(false));
     }
   };
 
@@ -167,9 +178,16 @@ const Signup = () => {
               />
             </div>
           </div>
-          <Button type="submit" className="w-full my-4  cursor-pointer">
-            Sign Up
-          </Button>
+          {loading ? (
+            <Button className="w-full my-4">
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please wait
+            </Button>
+          ) : (
+            <Button type="submit" className="w-full my-4 cursor-pointer">
+              Sign Up
+            </Button>
+          )}
+
           <span className="text-sm">
             Already have an account?{" "}
             <Link to="/login" className="text-blue-600 hover:underline">
