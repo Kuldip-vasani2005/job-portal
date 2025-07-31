@@ -1,12 +1,31 @@
-import React from 'react'
-import Navbar from './components/shared/Navbar'
+import React from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Login from "./components/auth/Login";
+import Signup from "./components/auth/Signup";
+import Home from "./components/Home"; // ✅ Make sure you have this component
+
+const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <Signup />,
+  },
+]);
 
 const App = () => {
   return (
-    <div>
-      <Navbar/>
-    </div>
-  )
-}
+    <>
+      
+      <RouterProvider router={appRouter} />
+    </>
+  );
+};
 
-export default App
+export default App;
